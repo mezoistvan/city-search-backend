@@ -30,7 +30,7 @@ async function search(ctx) {
         city.name.includes(searchTerm)
     ).map(city =>
         city.name
-    );
+    ).sort();
 }
 
 if (!module.parent) app.listen(port);
