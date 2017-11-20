@@ -1,6 +1,5 @@
 const cities = require('cities.json');
 const cool = require('cool-ascii-faces');
-const fancyLength = require('./util/fancyLength');
 
 const logger = require('koa-logger');
 const router = require('koa-router')();
