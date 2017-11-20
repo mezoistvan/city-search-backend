@@ -1,5 +1,6 @@
 const cities = require('cities.json');
 const cool = require('cool-ascii-faces');
+const fancyLength = require('./util/fancyLength');
 
 const logger = require('koa-logger');
 const router = require('koa-router')();
@@ -23,34 +24,7 @@ router
 app.use(router.routes());
 
 async function magicMirror(ctx) {
-    let line = cool();
-    line.padStart(Math.floor((22 - line.length) / 2), ' ')
-    line.padEnd(22, ' ');
-
-    ctx.body = `
-    THE MIRACULOUS MAGIC MIRROR
-    _________________________
-    (, ______________________ )
-    | |                      ||
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |${line}||  
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |                      ||  
-    | |______________________||  
-.---('________________________)--.
-|____          __________       _|
- |___|   -o-  |       |__|  -o- | 
- |___|   -o-  |       |__|  -o- | 
-     |________|       |__|______| 
-    `;
+    ctx.body = `There is nothing here. Except this coolface: ${cool()}`;
 }
 
 async function search(ctx) {
