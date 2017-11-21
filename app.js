@@ -4,7 +4,7 @@ const cool = require('cool-ascii-faces');
 const logger = require('koa-logger');
 const router = require('koa-router')();
 const koaBody = require('koa-body');
-const cors = require('koa-cors');
+const cors = require('koa2-cors');
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
@@ -14,7 +14,15 @@ const port = process.env.PORT || 3000;
 // middleware
 app.use(logger());
 app.use(koaBody());
-app.use(cors());
+app.use(cors({
+    origin: (ctx) => {
+        if (['https://shrouded-peak-89769.herokuapp.com', 'http://localhost:4200'].includes(ctx.header.origin)) {
+            return ctx.header.origin;
+        }
+        return false;
+    },
+    methods: 'POST'
+}));
 
 // route definitions
 router
