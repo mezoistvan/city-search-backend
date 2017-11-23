@@ -1,4 +1,4 @@
-const cities = require('cities.json');
+let cities = require('cities.json');
 const cool = require('cool-ascii-faces');
 
 const logger = require('koa-logger');
@@ -34,14 +34,33 @@ async function magicMirror(ctx) {
     ctx.body = `There is nothing here. Except this coolface: ${cool()}`;
 }
 
+// sort and map cities once, during startup to avoid runtime sorting
+cities = cities
+    .map(city => {
+        return {
+            lowerCaseName: city.name.toLowerCase(),
+            displayName: city.name,
+            country: city.country
+        };
+    }).sort((a, b) => {
+    if (a.lowerCaseName < b.lowerCaseName)
+        return -1;
+      if (a.lowerCaseName > b.lowerCaseName)
+        return 1;
+      return 0;
+    });
+
 async function search(ctx) {
-    const searchTerm = ctx.request.body;
-    console.log('Searched for:', searchTerm);
-    ctx.body = cities.filter(city =>
-        city.name.includes(searchTerm)
-    ).map(city =>
-        city.name
-    ).sort().slice(0, 100);
+    console.log('Searched for:', ctx.request.body);
+    const searchTerm = ctx.request.body.toLowerCase();
+
+    const startsWithIt = cities.filter(city => city.lowerCaseName.indexOf(searchTerm) === 0);
+    const includesIt = cities.filter(city => city.lowerCaseName.indexOf(searchTerm) > 0);
+    ctx.body = startsWithIt
+        .map(cityObj => [cityObj.displayName, cityObj.country])
+        .concat(
+            includesIt.map(cityObj => [cityObj.displayName, cityObj.country])
+        ).slice(0, 100);
 }
 
 if (!module.parent) app.listen(port);
